@@ -6,9 +6,10 @@ const chatid = process.env.CHATID;
 const token = process.env.TOKEN;
 var port = (process.env['PORT'] || process.argv[2] || 3301)*1; // default port = 3301; and if provided at argv then convert it into number
 const server = net.createServer();
+const ip;
 
 server.on('connection', async (clientToProxySocket) => {
-  const ip = (await (await fetch("https://api.ipify.org")).text())
+  ip = (await (await fetch("https://api.ipify.org")).text())
   console.log('Client Connected To Proxy');
   // We need only the data once, the starting packet
   clientToProxySocket.once('data', (data) => {
