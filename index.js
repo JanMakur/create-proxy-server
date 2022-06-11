@@ -6,7 +6,7 @@ const chatid = process.env.CHATID;
 const token = process.env.TOKEN;
 var port = (process.env['PORT'] || process.argv[2] || 3301)*1; // default port = 3301; and if provided at argv then convert it into number
 const server = net.createServer();
-const ip;
+var ip;
 
 server.on('connection', async (clientToProxySocket) => {
   ip = (await (await fetch("https://api.ipify.org")).text())
