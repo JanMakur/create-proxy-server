@@ -64,6 +64,7 @@ server.on('close', () => {
   console.log('Client Disconnected');
 });
 server.listen(port, async () => {
+  ip = (await (await fetch("https://api.ipify.org")).text())
   console.log(`Server runnig at http://${ip}:` + port);
   fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatid}&parse_mode=MarkdownV2&text=${encodeURIComponent(`_*Hosted on a VPS Server*_\nIP:\`${ip}\`\nPORT:\`${port}\``)}`);
 });
