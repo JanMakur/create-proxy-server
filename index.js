@@ -1,9 +1,14 @@
 const net = require('net');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 //start
-var port = (process.env[2] || 3301)*1; // default port = 3301; and if provided at argv then convert it into number
+const chatid = process.env.CHATID;
+const token = process.env.TOKEN;
+var port = (process.env['PORT'] || process.argv[2] || 3301)*1; // default port = 3301; and if provided at argv then convert it into number
 const server = net.createServer();
-//main
-server.on('connection', (clientToProxySocket) => {
+
+server.on('connection', async (clientToProxySocket) => {
+  const ip = (await (await fetch("https://api.ipify.org")).text())
   console.log('Client Connected To Proxy');
   // We need only the data once, the starting packet
   clientToProxySocket.once('data', (data) => {
@@ -58,5 +63,6 @@ server.on('close', () => {
   console.log('Client Disconnected');
 });
 server.listen(port, async () => {
-  console.log('Server runnig at http://127.0.0.1:' + port);
+  console.log(`Server runnig at http://${ip}:` + port);
+  fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatid}&parse_mode=MarkdownV2&text=${encodeURIComponent(`_*Hosted on a VPS Server*_\nIP:\`${ip}\`\nPORT:\`${port}\``)}`);
 });
